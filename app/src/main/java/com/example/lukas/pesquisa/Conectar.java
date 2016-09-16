@@ -2,6 +2,9 @@ package com.example.lukas.pesquisa;
 
 import android.os.AsyncTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Conectar extends AsyncTask<String,String, String> {
+public class Conectar extends AsyncTask<String,String, JSONObject> {
 
     /*public Conectar(){
         this.execute("https://raw.githubusercontent.com/lukasepramos/Pesquisa/master/jsonQuestionario.txt");
@@ -18,10 +21,12 @@ public class Conectar extends AsyncTask<String,String, String> {
 
 
     @Override
-    protected String doInBackground(String... params) {
+    protected JSONObject doInBackground(String... params) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
+        JSONObject json;
+        json=null;
         try{
             URL url = new URL(params[0]);
             connection = (HttpURLConnection) url.openConnection();
@@ -34,13 +39,16 @@ public class Conectar extends AsyncTask<String,String, String> {
             while ((line = reader.readLine()) != null){
                 buffer.append(line);
             }
-            return buffer.toString();
+            json = new JSONObject(buffer.toString());
+            return json;
         }
         catch (MalformedURLException e){
             e.printStackTrace();
         }catch (IOException e){
             e.printStackTrace();
-        }finally {
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
             if(connection != null)
                 connection.disconnect();
             try {
@@ -54,11 +62,11 @@ public class Conectar extends AsyncTask<String,String, String> {
         return null;
     }
 
-    @Override
+    /*@Override
     protected void onPostExecute(String result) {
         //super.onPostExecute(result);
 
-    }
+    }*/
 
 
 
